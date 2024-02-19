@@ -1,9 +1,9 @@
 import Fastify from "fastify"
 import fastifyBasicAuth from "@fastify/basic-auth"
+import fs from "node:fs"
 
 
-
-const port = 3000;
+const port = 4567;
 const authenticate = {realm: 'Westeros'}
 
 const fastify = Fastify({
@@ -11,8 +11,10 @@ const fastify = Fastify({
 })
 
 fastify.register(fastifyBasicAuth, {
-    validate,
-    authenticate
+    https: {
+        key: fs.readFileSync('server.key'),
+        cert: fs.readFileSync('server.crt'),
+    },
 })
 
 async function validate(username, password, req, reply) {
